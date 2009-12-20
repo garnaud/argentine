@@ -13,7 +13,7 @@ allTransferQuery.addSort("date", Query.SortDirection.ASCENDING)
 PreparedQuery pAllTransferQuery=datastore.prepare(allTransferQuery)
 def transfers=pAllTransferQuery.asList(withLimit(10))
 %>
-<table style="background-color:red">
+<table style="background-color:#FFFFA0;border-width:1px;border-style:solid;">
 <tr>
 <td>
 <h3>Les Rendez-vous</h3>
@@ -22,7 +22,7 @@ def transfers=pAllTransferQuery.asList(withLimit(10))
 if(transfers!=null){
 transfers.each{
 %>
-<tr><td> Le <%=String.format('%td/%<tm/%<tY ',it.date)%>, </td><td><%=it.person2%></td><td>doit venir chercher Apolline chez <i><%=it.where%></i></td><td> où <%=it.person1%> l'y attendra</td><td> à <b><%=String.format('%tH:%<tM ',it.date)%></b></td><td> (à noter: <%=it.comment%>)</td><td><form action="/remove_transfer/<%=it.key.id%>" type="get"><input type="submit" value="supprimer"></form></td></td></tr>
+<tr style="border-style:solid;border-width:1px;"><td> Le <%=String.format('%td/%<tm/%<tY ',it.date)%>, </td><td><%=it.person2%></td><td>doit venir chercher Apolline chez <i><%=it.where%></i></td><td> où <%=it.person1%> l'y attendra</td><td> à <b><%=String.format('%tH:%<tM ',it.date)%></b></td><td> (à noter: <%=it.comment%>)</td><td><form action="/remove_transfer/<%=it.key.id%>" type="get"><input type="submit" value="supprimer"></form></td></td></tr>
 <%
 }}
 %>
@@ -67,13 +67,41 @@ transfers.each{
   </select> minute<br>
   Où:<select name="where"><options><option>Raphaëlle et Guillaume</option><option>Edith et Jean-Luc</option><option>Catherine et Philippe</option><option>Delphine</option><option>A la crêche</option></options></select>
   Commentaire <input name="comment" type="text"><br>
-  <input name="submit" type="submit" value="Ajouter un transfert">
+  <input name="submit" type="submit" value="Ajouter un rendez-vous">
 </form>
+</div>
+<div>
+<%
+def allDaysQuery= new Query("Day")
+allDaysQuery.addSort("date", Query.SortDirection.ASCENDING)
+PreparedQuery pAllDayQuery=datastore.prepare(allDaysQuery)
+def days=pAllDayQuery.asList(withLimit(10))
+days.each{
+%>
+<div>
+<%=it['id']%> <%=String.format('%td/%<tm/%<tY',it['date'])%>
+<%
+def allNursesQuery=new Query("Nurse")
+allNursesQuery.addSort("hourStart", Query.SortDirection.ASCENDING)
+allNursesQuery.addFilter("day",Query.FilterOperator.EQUAL,it['id'])
+PreparedQuery pAllNursesQuery=datastore.prepare(allNursesQuery)
+def nurses=pAllNursesQuery.asList(withLimit(10))
+nurses.each{
+%>
+<%=it['person']%>
+<%}%>
+</div>
+<%
+}
+%>
 </div>
 </td>
 <td>
 <h2>Repas</h2>
 <h3>Petit Déjeuner</h3>
+<ul>
+<li>biberon: 240ml d'eau, 8 cuillères de lait, 2 cuillères de vanille
+</ul>
 <h3>Déjeuner</h3>
 <h3>Diner</h3>
 </td>
