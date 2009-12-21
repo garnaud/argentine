@@ -18,11 +18,13 @@ def transfers=pAllTransferQuery.asList(withLimit(10))
 <td>
 <h3>Les Rendez-vous</h3>
 <table>
+<tr style="background-color: lightgray;"><td>Quand</td><td>Personne(s) qui prend le relai</td><td>Chez qui</td><td>Qui s'en occupe</td><td>Heure du retrait</td><td>Commentaire</td><td></td></tr>
 <%
 if(transfers!=null){
 transfers.each{
 %>
-<tr style="border-style:solid;border-width:1px;"><td> Le <%=String.format('%td/%<tm/%<tY ',it.date)%>, </td><td><%=it.person2%></td><td>doit venir chercher Apolline chez <i><%=it.where%></i></td><td> où <%=it.person1%> l'y attendra</td><td> à <b><%=String.format('%tH:%<tM ',it.date)%></b></td><td> (à noter: <%=it.comment%>)</td><td><form action="/remove_transfer/<%=it.key.id%>" type="get"><input type="submit" value="supprimer"></form></td></td></tr>
+<!--<tr style="border-style:solid;border-width:1px;"><td> Le <%=String.format('%td/%<tm/%<tY ',it.date)%>, </td><td><%=it.person2%></td><td>doit venir chercher Apolline chez <i><%=it.where%></i></td><td> où <%=it.person1%> l'y attendra</td><td> à <b><%=String.format('%tH:%<tM ',it.date)%></b></td><td> (à noter: <%=it.comment%>)</td><td><form action="/remove_transfer/<%=it.key.id%>" type="get"><input type="submit" value="supprimer"></form></td></td></tr>-->
+<tr style="border-style:solid;border-width:1px;"><td><%=String.format('%td/%<tm/%<tY ',it.date)%></td><td><%=it.person2%></td><td><%=it.where%></td><td><%=it.person1%></td><td><%=String.format('%tH:%<tM ',it.date)%></td><td><%=it.comment%></td><td><form action="/remove_transfer/<%=it.key.id%>" type="get"><input type="submit" value="supprimer"></form></td></td></tr>
 <%
 }}
 %>
@@ -71,6 +73,7 @@ transfers.each{
 </form>
 </div>
 <div>
+<a href="/add_dates.groovy">mise à jour</a>
 <%
 def allDaysQuery= new Query("Day")
 allDaysQuery.addSort("date", Query.SortDirection.ASCENDING)
@@ -79,7 +82,7 @@ def days=pAllDayQuery.asList(withLimit(10))
 days.each{
 %>
 <div>
-<%=it['id']%> <%=String.format('%td/%<tm/%<tY',it['date'])%>
+<%=String.format('%td/%<tm/%<tY',it['date'])%>
 <%
 def allNursesQuery=new Query("Nurse")
 allNursesQuery.addSort("hourStart", Query.SortDirection.ASCENDING)
@@ -88,7 +91,7 @@ PreparedQuery pAllNursesQuery=datastore.prepare(allNursesQuery)
 def nurses=pAllNursesQuery.asList(withLimit(10))
 nurses.each{
 %>
-<%=it['person']%>
+<%=it['person']%> de <%=String.format('%tH:%<tM',it['hourStart'])%> à  <%=String.format('%tH:%<tM',it['hourEnd'])%><br>
 <%}%>
 </div>
 <%

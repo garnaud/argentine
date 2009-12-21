@@ -1,14 +1,8 @@
-<!-- Indices written at Sun, 20 Dec 2009 23:35:26 UTC -->
+<!-- Indices written at Sun, 20 Dec 2009 23:48:52 UTC -->
 
 <datastore-indexes>
 
-    <!-- Used 3 times in query history -->
-    <datastore-index kind="Nurse" ancestor="false" source="auto">
-        <property name="day" direction="asc"/>
-        <property name="dateStart" direction="asc"/>
-    </datastore-index>
-
-    <!-- Used 5 times in query history -->
+    <!-- Used 1 time in query history -->
     <datastore-index kind="Nurse" ancestor="false" source="auto">
         <property name="day" direction="asc"/>
         <property name="hourStart" direction="asc"/>
