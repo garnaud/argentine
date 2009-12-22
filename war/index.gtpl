@@ -2,10 +2,17 @@
 
 <script type="text/javascript">
 <!--
-function edit(id,comment){
+function editComment(id,comment){
   elem=document.getElementById('c'+id);
   elem.innerHTML="<form action='/addComment.groovy' type='POST'><input type='hidden' name='id' value='"+id+"'/><input name='comment' type='text' value='"+comment+"'/><input type='submit'></form>";
 }
+
+function editDiner(id,diner){
+  elem=document.getElementById(id);
+  elem.innerHTML="<form action='/addDiner.groovy' type='POST'><input type='hidden' name='id' value='"+id+"'/><input name='diner' type='text' value='"+diner+"'/><input type='submit'></form>";
+}
+
+
 //-->
 </script>
 <%
@@ -16,6 +23,11 @@ def query = new Query("Comment")
 query.addSort("day", Query.SortDirection.DESCENDING)
 PreparedQuery preparedQuery = datastore.prepare(query)
 def comments= preparedQuery.asList( withLimit(20) )
+
+query = new Query("Diner")
+query.addSort("type", Query.SortDirection.DESCENDING)
+preparedQuery = datastore.prepare(query)
+def diners= preparedQuery.asList( withLimit(20) )
 %>
 
 <h1>En route pour l'Argentine!</h1>
@@ -25,7 +37,7 @@ def comments= preparedQuery.asList( withLimit(20) )
 <div>
 <table style="font-size:14px;">
 <tr><td colspan="2">jour</td><td style="width:150px;">en france</td><td>commentaire</td><td>en argentine</td></tr>
-<tr><td>samedi</td><td>26/12</td><td style="width:150px;">Catherine & Philippe</td><td id="c1"><%=comments[0]['text']%> <div onClick="edit('1','<%=comments[0]['text']%>');">edit</div></td></tr>
+<tr><td>samedi</td><td>26/12</td><td style="width:150px;">Catherine & Philippe</td><td id="c1"><%=comments[0]['text']%> <div onClick="editComment('1','<%=comments[0]['text']%>');">edit</div></td></tr>
 <tr><td>dimanche</td><td>27/12</td><td style="width:150px;">Catherine & Philippe</td><td id="c2"></td></tr>
 <tr><td>lundi</td><td>28/12</td><td style="width:150px;">Catherine & Philippe</td></tr>
 <tr><td>mardi</td><td>29/12</td><td style="width:150px;">Catherine & Philippe<br>Edith & Jean-Luc</td></tr>
@@ -48,11 +60,14 @@ def comments= preparedQuery.asList( withLimit(20) )
 <td>
 <div>
 <h2>Repas</h2>
+
 <h3>Petit Déjeuner</h3>
 <ul>
 <li>biberon: 240ml d'eau, 8 cuillères de lait, 2 cuillères de vanille
 </ul>
 <h3>Déjeuner</h3>
+<div id="dejeuner"><%=(diners[0]!=null?diners[0]['text']:'')%></div>
+<div onClick="editDiner('dejeuner','<%=(diners[0]!=null?diners[0]['text']:'')%>');">edit</div>
 <h3>Diner</h3>
 </td>
 </div>
